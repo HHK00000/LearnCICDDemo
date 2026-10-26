@@ -19,14 +19,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      # 新增：安装 Node
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
 
+      # 新增：安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 新增：执行打包命令，和package.json里scripts的build保持一致
+      - name: Build project
+        run: npm run build
+
+      # 上传打包产物，path改为dist（vite/vue默认输出dist）
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: './dist'
 
+  # 单独部署job，依赖build完成后才执行
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
