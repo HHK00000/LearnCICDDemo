@@ -58,7 +58,7 @@ https://<你的用户名>.github.io/<仓库名>/
 ## 验证「提交就会部署」
 
 1. 编辑 `src/release.js` 里的 `notice`。
-2. 提交并推送：
+2. 提交并推送 ：
 
 ```bash
 git add src/release.js
